@@ -8,7 +8,7 @@ Node의 웹 애플리케이션 프레임워크
 > 개발자가 구조를 직접 관리
 
 ## NestJS란?
-NestJS는 TypeScript 기반의 Node.js 백엔드 프레임워크로, 객체지향프로그래밍(OOP), 함수형 프로그래밍(FP), 기능 반응형 프로그래밍(FRP) 요소를 결합함함
+TypeScript 기반의 Node.js 백엔드 프레임워크
 
 **객체지향 프로그래밍**의 핵심 원칙과 개념을 깊이 통합하고 있음
 > 클래스, 인스턴스, 상속, 캡슐화, 다형성 등 OOP의 주요 개념을 활용하여 구조화<br>
@@ -18,19 +18,30 @@ Express와 Fastify를 지원하며, Express 기반으로 동작하지만, 필요
 > Fastify란 ? Node 기반 백엔드 프레임워크<br>
 > Express가 Fastify보다 많이 사용되기때문
 
-Angular와 유사한 구조로(데코레이터, 모듈 시스템) 프론트엔드 개발자도 쉽게 접근 가능
+Angular와 유사한 구조로(데코레이터, 모듈 시스템) 프론트엔드 개발자도 쉽게 접근 가능<br>
 
+GraphQL, WebSockets, 마이크로서비스 지원<br>
 
 ## 주요 특징
 ### 1. 모듈 기반 아키텍처<br>
 모듈 기반으로 애플리케이션 구성<br>
 
 각 기능을 독립적인 모듈로 나눠서 유지보수 & 확장하기 편리<br>
-> 코드 관리가 쉬워짐<br>
 
 싱글톤(Singleton)패턴<br>
-> 생성자가 여러차례 호출되어도 실제로 생성되는 객체는 하나<br>
-<br>
+
+### 2. 의존성 주입(DI, Dependency Injection)
+NestJS의 코어 기능<br>
+
+객체가 직접 다른 객체를 생성하지 않고 외부에서 필요한 의존성을 주입받는 패턴<br>
+
+NestJS는 **의존성 관리(Dependency Management)를 자동으로 처리**하여 코드의 **유지보수성을 높이고 결합도를 낮춤**<br>
+
+```ts
+@Injectable() // 의존성 주입을 사용할 수 있도록 클래스에 적용하는 데코레이터
+export class UsersService {
+}
+```
 
 ```ts
 import { Module } from '@nestjs/common';
@@ -56,20 +67,6 @@ export class AppModule {}
 | exports | 해당 모듈에서 제공하는 providers들 중 일부를 다른 모듈에서 사용할 수 있게 export함 | 
 <br>
 
-### 2. 의존성 주입(DI, Dependency Injection)
-NestJS의 코어 기능<br>
-
-객체가 직접 다른 객체를 생성하지 않고(new 객체() X) 외부에서 필요한 의존성을 주입받는 패턴<br>
-
-NestJS는 **의존성 관리(Dependency Management)를 자동으로 처리**하여 코드의 **유지보수성을 높이고 결합도를 낮춤**<br>
-
-```ts
-@Injectable() // 의존성 주입을 사용할 수 있도록 클래스에 적용하는 데코레이터
-export class UsersService {
-  constructor(private readonly userRepository: UserRepository) {} // DI 적용
-}
-```
-
 ### 3. 데코레이터 기반 코드 스타일
 @Controller(), @Get(), @Post() 등의 데코레이터를 사용하여 직관적인 코드 작성 가능<br>
 
@@ -78,7 +75,7 @@ export class UsersService {
 
 **초기화, 요청 처리, 종료처리** 등 세밀하게 제어 가능함<br>
 
-- #### 애플리케이션 라이프사이클 훅
+- #### 초기화, 종료처리
   ![라이프사이클](https://docs.nestjs.com/assets/lifecycle-events.png)
 
 	| 훅(Hook) | 실행 시점 | 사용 목적 |
@@ -89,7 +86,7 @@ export class UsersService {
 	| BeforeApplicationShutdown  | onModuleDestroy가 완료된 후 | app.close()을 호출하여 기존의 모든 커넥션이 종료 |
 	| OnApplicationShutdown  | app.close()가 실제로 수행되고 난 뒤 호출 | 데이터베이스 연결 해제, 큐 정리 등 |
  
-- #### 로직 수행의 흐름
+- #### 요청처리
   ![로직수행](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FJ8hdc%2FbtsALYS9NPA%2FSkRKFMKwrTvwbHYQdwMxXk%2Fimg.png)
 
 	1. 미들웨어 (Middleware)
